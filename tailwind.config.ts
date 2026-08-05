@@ -12,6 +12,10 @@ export default {
 
   theme: {
   	extend: {
+      fontFamily: {
+        sans: ['Barlow', 'sans-serif'],
+        display: ['"Bebas Neue"', 'sans-serif'],
+      },
   		container: {
   			screens: {
   				'2xl': '1440px'
@@ -23,6 +27,7 @@ export default {
   			grey: '#636F85',
   			white: '#FFF',
 			tertiary: "#A31E3D",
+			brandGreen: '#16a34a',
   			default: '#191919',
   			foreground: 'hsl(var(--foreground))',
   			card: {

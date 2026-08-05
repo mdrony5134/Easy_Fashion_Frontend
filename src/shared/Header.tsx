@@ -1,10 +1,10 @@
 "use client";
 
+import { Menu, ShoppingBag, User, X } from "lucide-react";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { Menu, ShoppingBag, User, X } from "lucide-react";
-import { signOut, useSession } from "next-auth/react";
 
 import logo from "@/assets/logo.webp";
 import { Button } from "@/components/ui/button";
@@ -27,7 +27,12 @@ export function Header() {
     <header className="sticky top-0 z-50 border-b border-border/70 bg-background/85 backdrop-blur-xl">
       <div className="container mx-auto grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 py-3 sm:px-6 lg:grid-cols-[auto_1fr_auto]">
         <Link href="/" className="flex min-w-0 items-center gap-2">
-          <Image src={logo} alt="EASY fashion" className="h-8 w-auto shrink-0" priority />
+          <Image
+            src={logo}
+            alt="EASY fashion"
+            className="h-8 w-auto shrink-0"
+            priority
+          />
         </Link>
 
         <nav className="hidden items-center justify-center gap-8 lg:flex">
@@ -58,13 +63,23 @@ export function Header() {
 
           {session ? (
             <div className="hidden items-center gap-2 sm:flex">
-              <span className="max-w-[9rem] truncate text-sm font-semibold">{userName.split(" ")[0]}</span>
-              <Button variant="outline" size="sm" onClick={() => signOut({ callbackUrl: "/" })}>
+              <span className="max-w-[9rem] truncate text-sm font-semibold">
+                {userName.split(" ")[0]}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => signOut({ callbackUrl: "/" })}
+              >
                 Log out
               </Button>
             </div>
           ) : (
-            <Button asChild size="sm" className="hidden sm:inline-flex">
+            <Button
+              asChild
+              size="sm"
+              className="hidden sm:inline-flex text-white bg-primary hover:bg-primary/90 rounded"
+            >
               <Link href="/login">
                 <User className="size-4" /> Sign in
               </Link>

@@ -25,7 +25,7 @@ export default function Home() {
           {SUMMARY.map(({ label, value, icon: Icon, note }) => (
             <div
               key={label}
-              className="hover-lift group relative overflow-hidden rounded-xl border border-border bg-card p-6"
+              className="hover-lift group relative overflow-hidden rounded-xl bg-white shadow-sm transition-shadow hover:shadow-md p-6"
             >
               <div className="absolute -right-6 -top-6 size-24 rounded-full bg-primary/10 transition-transform duration-500 group-hover:scale-150" />
               <Icon className="size-6 text-primary" />
@@ -45,9 +45,9 @@ export default function Home() {
             <p className="text-xs font-bold uppercase tracking-[0.24em] text-primary">
               Featured edit
             </p>
-            <h2 className="mt-2 text-4xl sm:text-5xl">Fresh off the rail</h2>
+            <h2 className="mt-2 text-4xl font-display uppercase tracking-wider sm:text-5xl">FRESH OFF THE RAIL</h2>
           </div>
-          <Button asChild variant="outline" className="shrink-0">
+          <Button asChild variant="outline" className="shrink-0 rounded-md border-border bg-white text-black hover:bg-gray-50">
             <Link href="/shop">
               Shop all <ArrowRight className="size-4" />
             </Link>

@@ -1,16 +1,17 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Facebook, Instagram, Mail, MapPin, Phone, Twitter, Youtube } from "lucide-react";
+import { TbCurrencyTaka } from "react-icons/tb";
 
 import logo from "@/assets/logo.webp";
 
 export function Footer() {
   return (
-    <footer className="mt-24 bg-ink text-ink-foreground">
+    <footer className="mt-24 bg-default text-white">
       <div className="container mx-auto grid gap-10 px-4 py-14 sm:px-6 md:grid-cols-2 lg:grid-cols-4">
         <div>
           <Image src={logo} alt="EASY fashion" className="h-9 w-auto" priority />
-          <p className="mt-4 max-w-xs text-sm leading-relaxed text-ink-foreground/70">
+          <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/70">
             EASY is a modern fashion house building wearable essentials — cut clean, priced fair and
             made to last across every size and style.
           </p>
@@ -21,7 +22,7 @@ export function Footer() {
 
         <div>
           <h3 className="text-xl text-brand-green">Company</h3>
-          <ul className="mt-4 space-y-2 text-sm text-ink-foreground/70">
+          <ul className="mt-4 space-y-2 text-sm text-white/70">
             <li>
               <Link href="/shop" className="transition-colors hover:text-primary">
                 Shop all
@@ -36,7 +37,7 @@ export function Footer() {
 
         <div>
           <h3 className="text-xl text-brand-green">Contact</h3>
-          <ul className="mt-4 space-y-3 text-sm text-ink-foreground/70">
+          <ul className="mt-4 space-y-3 text-sm text-white/70">
             <li className="flex items-start gap-2">
               <MapPin className="mt-0.5 size-4 shrink-0 text-primary" />
               128 Gulshan Avenue, Dhaka 1212
@@ -72,14 +73,14 @@ export function Footer() {
               </a>
             ))}
           </div>
-          <p className="mt-5 text-sm text-ink-foreground/70">
-            Free shipping on orders over $5,000. Easy 14-day exchange.
+          <p className="mt-5 text-sm text-white/70">
+            Free shipping on orders over <TbCurrencyTaka className="inline text-base -mt-0.5 -mr-0.5" />5,000. Easy 14-day exchange.
           </p>
         </div>
       </div>
 
-      <div className="border-t border-ink-foreground/10 px-4 py-5 sm:px-6">
-        <p className="container mx-auto text-center text-xs text-ink-foreground/60">
+      <div className="border-t border-white/10 px-4 py-5 sm:px-6">
+        <p className="container mx-auto text-center text-xs text-white/60">
           © {new Date().getFullYear()} EASY Fashion Ltd. All rights reserved.
         </p>
       </div>

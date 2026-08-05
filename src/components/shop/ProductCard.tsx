@@ -16,7 +16,7 @@ export function ProductCard({ product }: { product: Product }) {
   const primaryImage = getImageSrc(product.images[0]!);
 
   return (
-    <article className="group hover-lift flex flex-col overflow-hidden rounded-xl border border-border bg-card">
+    <article className="group hover-lift flex flex-col overflow-hidden rounded-xl bg-white shadow-sm transition-shadow hover:shadow-md">
       <Link href={`/shop/details/${product.id}`} className="relative block overflow-hidden bg-secondary">
         <Image
           src={product.images[0]}
@@ -40,7 +40,7 @@ export function ProductCard({ product }: { product: Product }) {
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
             {product.category}
           </p>
-          <h3 className="mt-1 truncate text-xl">
+          <h3 className="mt-1 truncate font-display text-2xl uppercase tracking-wider">
             <Link href={`/shop/details/${product.id}`}>{product.name}</Link>
           </h3>
         </div>
@@ -59,15 +59,11 @@ export function ProductCard({ product }: { product: Product }) {
         <div className="mt-auto flex items-end justify-between gap-3 pt-1">
           <div className="min-w-0">
             <span className="text-2xl font-bold tracking-tight">{formatPrice(product.price)}</span>
-            {product.oldPrice && (
-              <span className="ml-2 text-sm text-muted-foreground line-through">
-                {formatPrice(product.oldPrice)}
-              </span>
-            )}
+
           </div>
           <Button
             size="sm"
-            className="shrink-0"
+            className="shrink-0 bg-primary text-white hover:bg-primary/90 rounded"
             onClick={() => {
               if (!primarySize) return;
               dispatch(

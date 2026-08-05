@@ -1,4 +1,5 @@
 import type { StaticImageData } from "next/image";
+import { TbCurrencyTaka } from "react-icons/tb";
 import shirt from "@/assets/p-shirt.jpg";
 import dress from "@/assets/p-dress.jpg";
 import jeans from "@/assets/p-jeans.jpg";
@@ -201,8 +202,12 @@ export const SIZES = Array.from(new Set(PRODUCTS.flatMap((p) => p.sizes))).sort(
   return Number(a) - Number(b);
 });
 
-export const formatPrice = (value: number) =>
-  `$${value.toLocaleString("en-US")}`;
+export const formatPrice = (value: number) => (
+  <span className="inline-flex items-center">
+    <TbCurrencyTaka className="text-[1.15em] -mr-0.5" />
+    {value.toLocaleString("en-US")}
+  </span>
+);
 
 export const getProduct = (id: string) => PRODUCTS.find((p) => p.id === id);
 
