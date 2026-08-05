@@ -2,13 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import notFoundImage from "@/assets/Error-rafiki.png";
-// import logo from "@/assets/home/c-logo.jpeg";
-// import Image from "next/image";
+import notFoundImage from "@/assets/logo.webp";
 
-// import Link from "next/link";
-
-// import Link from &apos;next/link&apos;;
 
 const NotFound = () => {
   return (

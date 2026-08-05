@@ -1,4 +1,4 @@
-import logo from "@/assets/home/logo.png";
+import logo from "@/assets/logo.webp";
 // import { AuthSync } from "@/components/auth/AuthSync";
 import type { Metadata } from "next";
 // import { Poppins } from "next/font/google";
