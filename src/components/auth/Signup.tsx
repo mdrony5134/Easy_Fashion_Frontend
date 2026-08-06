@@ -1,45 +1,27 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useUserRegistrationMutation } from "@/redux/api/registerApi";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, User, Mail, Phone, Lock, UserPlus } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type React from "react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
-
-// Define the validation schema
-const signUpSchema = z
-  .object({
-    firstName: z.string().nonempty("First name is required"),
-    lastName: z.string().nonempty("Last name is required"),
-    email: z.string().email("Please enter a valid email address"),
-    phone: z
-      .string()
-      .min(10, "Phone number must be at least 10 digits")
-      .max(15, "Phone number must be less than 15 digits")
-      .regex(/^[0-9+\-\s()]+$/, "Please enter a valid phone number"),
-    password: z.string().min(8, "Password must be at least 8 characters"),
-
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"],
-  });
+import logo from "@/assets/logo.webp";
+import { signUpSchema } from "@/schema/SignUpSchema";
 
 type SignUpFormData = z.infer<typeof signUpSchema>;
 
 export default function SignUpPage() {
   const [formData, setFormData] = useState<SignUpFormData>({
-    firstName: "",
-    lastName: "",
+    fullName: "",
     email: "",
     phone: "",
     password: "",
@@ -62,7 +44,6 @@ export default function SignUpPage() {
       [name]: value,
     });
 
-    // Clear error when user starts typing
     if (errors[name as keyof SignUpFormData]) {
       setErrors({
         ...errors,
@@ -75,11 +56,9 @@ export default function SignUpPage() {
     e.preventDefault();
     setIsLoading(true);
 
-    // Validate form data
     const validationResult = signUpSchema.safeParse(formData);
 
     if (!validationResult.success) {
-      // Convert Zod errors to a simpler format
       const newErrors: Partial<Record<keyof SignUpFormData, string>> = {};
       validationResult.error.errors.forEach((error) => {
         const fieldName = error.path[0] as keyof SignUpFormData;
@@ -90,37 +69,24 @@ export default function SignUpPage() {
       return;
     }
 
-    // Clear errors if validation passes
     setErrors({});
 
     try {
-      // Prepare body data with required fields
       const bodyData = {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
+        fullName: formData.fullName,
         email: formData.email,
         phone: formData.phone,
         password: formData.password,
       };
 
-      console.log("Sign up data:", bodyData);
+      // console.log("Sign up data:", bodyData);
 
-      // Call the registration API
       const response = await userRegistrationFn(bodyData).unwrap();
-
-      // Check if registration was successful
-      if (response.success) {
-        console.log("Registration successful:", response);
-        toast.success(
-          "Registration successful! Please check your email for the OTP."
-        );
-
-        // Redirect to OTP verification page with email as query parameter
-        router.push(
-          `/signup/verify-otp?email=${encodeURIComponent(formData.email)}`
-        );
+      if (response) {
+        // console.log("Registration successful:", response);
+        toast.success("User created successfully! Please login to continue.");
+        router.push("/login");
       } else {
-        // Handle API error response
         console.error("Registration failed:", response);
         setErrors({
           email: response.message || "Registration failed. Please try again.",
@@ -128,8 +94,6 @@ export default function SignUpPage() {
       }
     } catch (error: any) {
       console.error("Registration error:", error);
-
-      // Handle different types of errors
       if (error.data?.message) {
         setErrors({
           email: error.data.message,
@@ -149,65 +113,59 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-2xl w-full space-y-8 border border-[#ADADAD40] rounded-2xl p-8 shadow-sm">
+    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-primary/5 to-white">
+      <div className="max-w-2xl w-full space-y-8 bg-white border border-[#ADADAD40] rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-shadow duration-300">
+        {/* Logo and Header */}
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-gray-900 mb-8">
+          <div className="flex justify-center mb-4">
+            <div className="relative w-[180px] h-20">
+              <Image
+                src={logo}
+                alt="Logo"
+                fill
+                className="object-contain"
+                priority
+              />
+            </div>
+          </div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
             Create an account
           </h1>
+          <p className="text-gray-500 text-sm">
+            Join us and start your journey today
+          </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label
-                htmlFor="firstName"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
-                First name
-              </Label>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Full Name */}
+          <div>
+            <Label
+              htmlFor="fullName"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Full Name
+            </Label>
+            <div className="relative">
+              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
               <Input
-                id="firstName"
-                name="firstName"
+                id="fullName"
+                name="fullName"
                 type="text"
-                placeholder="First name"
-                value={formData.firstName}
+                placeholder="Enter your full name"
+                value={formData.fullName}
                 onChange={handleInputChange}
-                className={`w-full px-4 py-6 border rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ${
-                  errors.firstName ? "border-red-500" : "border-gray-300"
+                className={`w-full pl-10 pr-4 py-6 border rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200 ${
+                  errors.fullName ? "border-red-500" : "border-gray-300"
                 }`}
                 required
                 disabled={isLoading}
               />
-              {errors.firstName && (
-                <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>
-              )}
             </div>
-
-            <div>
-              <Label
-                htmlFor="lastName"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
-                Last name
-              </Label>
-              <Input
-                id="lastName"
-                name="lastName"
-                type="text"
-                placeholder="Last name"
-                value={formData.lastName}
-                onChange={handleInputChange}
-                className={`w-full px-4 py-6 border rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ${
-                  errors.lastName ? "border-red-500" : "border-gray-300"
-                }`}
-                required
-                disabled={isLoading}
-              />
-              {errors.lastName && (
-                <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>
-              )}
-            </div>
+            {errors.fullName && (
+              <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                <span className="text-xs">⚠</span> {errors.fullName}
+              </p>
+            )}
           </div>
 
           {/* Email */}
@@ -218,21 +176,26 @@ export default function SignUpPage() {
             >
               Email Address
             </Label>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              placeholder="Email Address"
-              value={formData.email}
-              onChange={handleInputChange}
-              className={`w-full px-4 py-6 border rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ${
-                errors.email ? "border-red-500" : "border-gray-300"
-              }`}
-              required
-              disabled={isLoading}
-            />
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="Enter your email address"
+                value={formData.email}
+                onChange={handleInputChange}
+                className={`w-full pl-10 pr-4 py-6 border rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200 ${
+                  errors.email ? "border-red-500" : "border-gray-300"
+                }`}
+                required
+                disabled={isLoading}
+              />
+            </div>
             {errors.email && (
-              <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+              <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                <span className="text-xs">⚠</span> {errors.email}
+              </p>
             )}
           </div>
 
@@ -244,21 +207,26 @@ export default function SignUpPage() {
             >
               Phone Number
             </Label>
-            <Input
-              id="phone"
-              name="phone"
-              type="tel"
-              placeholder="Phone number"
-              value={formData.phone}
-              onChange={handleInputChange}
-              className={`w-full px-4 py-6 border rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ${
-                errors.phone ? "border-red-500" : "border-gray-300"
-              }`}
-              required
-              disabled={isLoading}
-            />
+            <div className="relative">
+              <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+              <Input
+                id="phone"
+                name="phone"
+                type="tel"
+                placeholder="Enter your phone number"
+                value={formData.phone}
+                onChange={handleInputChange}
+                className={`w-full pl-10 pr-4 py-6 border rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200 ${
+                  errors.phone ? "border-red-500" : "border-gray-300"
+                }`}
+                required
+                disabled={isLoading}
+              />
+            </div>
             {errors.phone && (
-              <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
+              <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                <span className="text-xs">⚠</span> {errors.phone}
+              </p>
             )}
           </div>
 
@@ -271,14 +239,15 @@ export default function SignUpPage() {
               Password
             </Label>
             <div className="relative">
+              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
               <Input
                 id="password"
                 name="password"
                 type={showPassword ? "text" : "password"}
-                placeholder="••••••"
+                placeholder="Create a strong password"
                 value={formData.password}
                 onChange={handleInputChange}
-                className={`w-full px-4 py-6 pr-12 border rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ${
+                className={`w-full pl-10 pr-12 py-6 border rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200 ${
                   errors.password ? "border-red-500" : "border-gray-300"
                 }`}
                 required
@@ -287,14 +256,16 @@ export default function SignUpPage() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors duration-200"
                 disabled={isLoading}
               >
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
             </div>
             {errors.password && (
-              <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+              <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                <span className="text-xs">⚠</span> {errors.password}
+              </p>
             )}
           </div>
 
@@ -304,17 +275,18 @@ export default function SignUpPage() {
               htmlFor="confirmPassword"
               className="block text-sm font-medium text-gray-700 mb-2"
             >
-              Confirm password
+              Confirm Password
             </Label>
             <div className="relative">
+              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
               <Input
                 id="confirmPassword"
                 name="confirmPassword"
                 type={showConfirmPassword ? "text" : "password"}
-                placeholder="••••••"
+                placeholder="Confirm your password"
                 value={formData.confirmPassword}
                 onChange={handleInputChange}
-                className={`w-full px-4 py-6 pr-12 border rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ${
+                className={`w-full pl-10 pr-12 py-6 border rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200 ${
                   errors.confirmPassword ? "border-red-500" : "border-gray-300"
                 }`}
                 required
@@ -323,63 +295,60 @@ export default function SignUpPage() {
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors duration-200"
                 disabled={isLoading}
               >
                 {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
             </div>
             {errors.confirmPassword && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.confirmPassword}
+              <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                <span className="text-xs">⚠</span> {errors.confirmPassword}
               </p>
             )}
           </div>
 
-          {/* Submit */}
+          {/* Submit Button */}
           <Button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-primary text-white font-medium py-6 px-4 rounded-[40px] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-primary hover:bg-primary/90 text-white font-medium py-6 px-4 rounded-xl transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 shadow-lg hover:shadow-primary/20"
           >
             {isLoading ? (
-              <div className="flex items-center justify-center">
-                <svg
-                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-                Signing up...
+              <div className="flex items-center justify-center gap-2">
+                <Lock className="h-5 w-5 animate-spin" />
+                <span>Creating account...</span>
               </div>
             ) : (
-              "Sign up"
+              <div className="flex items-center justify-center gap-2">
+                <UserPlus className="h-5 w-5" />
+                <span>Create Account</span>
+              </div>
             )}
           </Button>
 
-          <div className="text-center">
+          {/* Sign In Link */}
+          <div className="text-center pt-2">
             <span className="text-gray-600">Already have an account? </span>
             <Link
               href="/login"
-              className="text-primary hover:text-primary font-medium"
+              className="text-primary hover:text-primary/80 font-semibold hover:underline transition-all duration-200"
             >
               Sign in
             </Link>
           </div>
+
+          {/* Terms */}
+          <p className="text-xs text-gray-400 text-center mt-4">
+            By creating an account, you agree to our{" "}
+            <Link href="/terms" className="text-primary hover:underline">
+              Terms of Service
+            </Link>{" "}
+            and{" "}
+            <Link href="/privacy" className="text-primary hover:underline">
+              Privacy Policy
+            </Link>
+          </p>
         </form>
       </div>
     </div>

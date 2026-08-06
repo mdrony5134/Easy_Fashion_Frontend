@@ -1,15 +1,16 @@
 "use client";
 
 import { Menu, ShoppingBag, User, X } from "lucide-react";
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-
 import logo from "@/assets/logo.webp";
 import { Button } from "@/components/ui/button";
 import { selectCartCount } from "@/redux/allSlice/cartSlice";
 import { useAppSelector } from "@/redux/store";
+import Cookies from "js-cookie";
+import profileImage from "@/assets/profile.png";
 
 const NAV = [
   { href: "/", label: "Home" },
@@ -18,13 +19,12 @@ const NAV = [
 ];
 
 export function Header() {
-  const { data: session } = useSession();
   const cartCount = useAppSelector(selectCartCount);
   const [open, setOpen] = useState(false);
-  const userName = session?.user?.name ?? session?.user?.email ?? "Account";
+  const token = Cookies.get("accessToken");
 
   return (
-    <header className="sticky top-0 z-50 border-b border-transparent/10 bg-background/85 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 border-b border-transparent/10 bg-secondary/85 backdrop-blur-xl">
       <div className="container mx-auto grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 py-3 sm:px-6 lg:grid-cols-[auto_1fr_auto]">
         <Link href="/" className="flex min-w-0 items-center gap-2">
           <Image
@@ -61,18 +61,19 @@ export function Header() {
             )}
           </Link>
 
-          {session ? (
+          {token ? (
             <div className="hidden items-center gap-2 sm:flex">
-              <span className="max-w-[9rem] truncate text-sm font-semibold">
-                {userName.split(" ")[0]}
-              </span>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => signOut({ callbackUrl: "/" })}
-              >
-                Log out
-              </Button>
+              <Link href="/profile">
+                <div className="relative size-9 cursor-pointer overflow-hidden rounded-full border-2 border-primary/20 transition-all hover:border-primary hover:shadow-md">
+                  <Image
+                    src={profileImage}
+                    alt="Profile"
+                    className="h-full w-full object-cover"
+                    width={36}
+                    height={36}
+                  />
+                </div>
+              </Link>
             </div>
           ) : (
             <Button
@@ -109,16 +110,34 @@ export function Header() {
                 {item.label}
               </Link>
             ))}
-            {session ? (
-              <button
-                className="text-left text-sm font-semibold uppercase tracking-[0.14em] text-primary"
-                onClick={() => {
-                  signOut({ callbackUrl: "/" });
-                  setOpen(false);
-                }}
-              >
-                Log out
-              </button>
+            {token ? (
+              <>
+                <Link
+                  href="/profile"
+                  onClick={() => setOpen(false)}
+                  className="flex items-center gap-3 text-sm font-semibold uppercase tracking-[0.14em] text-foreground"
+                >
+                  <div className="relative size-8 overflow-hidden rounded-full border-2 border-primary/20">
+                    <Image
+                      src={profileImage}
+                      alt="Profile"
+                      className="h-full w-full object-cover"
+                      width={32}
+                      height={32}
+                    />
+                  </div>
+                  Profile
+                </Link>
+                <button
+                  className="text-left text-sm font-semibold uppercase tracking-[0.14em] text-primary"
+                  onClick={() => {
+                    signOut({ callbackUrl: "/" });
+                    setOpen(false);
+                  }}
+                >
+                  Log out
+                </button>
+              </>
             ) : (
               <Link
                 href="/login"

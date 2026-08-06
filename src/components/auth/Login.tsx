@@ -14,6 +14,8 @@ import { useRouter } from "next/navigation";
 import type React from "react";
 import { useState } from "react";
 import { toast } from "sonner";
+import logo from "@/assets/logo.webp";
+import Image from "next/image";
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
@@ -75,14 +77,12 @@ export default function LoginPage() {
 
       const response = await userLoginFn(loginData).unwrap();
 
-      if (response?.success) {
-        console.log("Login successful:", response);
+      if (response) {
+        // console.log("Login successful:", response);
         toast.success("Login successful!");
-
-        // Store token in localStorage or context
-        if (response?.result?.accessToken) {
-          Cookies.set("accessToken", response.result.accessToken);
-          // Redirect to dashboard or home page
+        if (response?.data?.accessToken) {
+          console.log("accessToken", response?.data?.accessToken);
+          Cookies.set("accessToken", response?.data?.accessToken);
           router.push("/");
         }
       } else {
@@ -103,12 +103,6 @@ export default function LoginPage() {
         setErrors({
           ...errors,
           general: "Invalid email or password. Please try again.",
-        });
-      } else if (error.status === 403) {
-        setErrors({
-          ...errors,
-          general:
-            "Account not verified. Please check your email for verification link.",
         });
       } else if (error.status === 404) {
         setErrors({
@@ -141,7 +135,23 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-2xl w-full space-y-8 border border-[#ADADAD40] rounded-2xl p-8 shadow-sm">
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-gray-900 mb-8">Log In</h1>
+          <div className="flex justify-center mb-4">
+            <div className="relative w-[180px] h-20">
+              <Image
+                src={logo}
+                alt="Logo"
+                fill
+                className="object-contain"
+                priority
+              />
+            </div>
+          </div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Welcome Back!
+          </h1>
+          <p className="text-gray-500 text-sm">
+            Please enter your credentials to log in to your account.
+          </p>
         </div>
 
         {/* General Error Message */}
@@ -227,26 +237,7 @@ export default function LoginPage() {
           >
             {isLoading ? (
               <div className="flex items-center justify-center">
-                <svg
-                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
+                <Loader2 className="animate-spin mr-2" size={20} />
                 Logging in...
               </div>
             ) : (

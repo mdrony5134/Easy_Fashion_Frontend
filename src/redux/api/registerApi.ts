@@ -4,23 +4,7 @@ const registerApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     userRegistration: builder.mutation({
       query: (data) => ({
-        url: `/users/request`,
-        method: "POST",
-        body: data,
-      }),
-      invalidatesTags: ["User"],
-    }),
-    userVerifyOtp: builder.mutation({
-      query: (data) => ({
-        url: `/users/create`,
-        method: "POST",
-        body: data,
-      }),
-      invalidatesTags: ["User"],
-    }),
-    userResendOtp: builder.mutation({
-      query: (data) => ({
-        url: `/users/otp-resend`,
+        url: `/auth/register`,
         method: "POST",
         body: data,
       }),
@@ -48,8 +32,6 @@ const registerApi = baseApi.injectEndpoints({
 
 export const {
   useUserRegistrationMutation,
-  useUserVerifyOtpMutation,
-  useUserResendOtpMutation,
   useUserLoginMutation,
   useUserStoreMutation
 } = registerApi;
