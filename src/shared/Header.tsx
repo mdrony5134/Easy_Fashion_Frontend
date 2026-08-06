@@ -24,7 +24,7 @@ export function Header() {
   const userName = session?.user?.name ?? session?.user?.email ?? "Account";
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border/70 bg-background/85 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 border-b border-transparent/10 bg-background/85 backdrop-blur-xl">
       <div className="container mx-auto grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 py-3 sm:px-6 lg:grid-cols-[auto_1fr_auto]">
         <Link href="/" className="flex min-w-0 items-center gap-2">
           <Image
@@ -55,7 +55,7 @@ export function Header() {
           >
             <ShoppingBag className="size-5" />
             {cartCount > 0 && (
-              <span className="absolute -right-0.5 -top-0.5 grid size-5 place-items-center rounded-full bg-primary text-[11px] font-bold text-primary-foreground">
+              <span className="absolute -right-0.5 -top-0.5 grid size-5 place-items-center rounded-full bg-primary text-[11px] font-bold text-white">
                 {cartCount}
               </span>
             )}

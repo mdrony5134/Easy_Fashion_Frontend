@@ -26,17 +26,19 @@ export default function Cart() {
 
   return (
     <div className="container mx-auto px-4 py-10 sm:px-6 sm:py-14">
-      <p className="text-xs font-bold uppercase tracking-[0.24em] text-primary">Shopping bag</p>
+      <p className="text-xs font-bold uppercase tracking-[0.24em] text-primary">
+        Shopping bag
+      </p>
       <h1 className="mt-2 text-4xl sm:text-6xl">Your cart</h1>
 
       {cart.length === 0 ? (
-        <div className="mt-10 rounded-xl border border-dashed border-border p-16 text-center">
+        <div className="mt-10 rounded-xl border border-dashed border-primary/40 p-16 text-center">
           <ShoppingBag className="mx-auto size-10 text-muted-foreground" />
           <h2 className="mt-4 text-2xl">Your cart is empty</h2>
           <p className="mt-2 text-sm text-muted-foreground">
             Add a few essentials and they will show up here.
           </p>
-          <Button asChild className="mt-6">
+          <Button asChild className="mt-6 text-white rounded">
             <Link href="/shop">Start shopping</Link>
           </Button>
         </div>
@@ -46,9 +48,12 @@ export default function Cart() {
             {cart.map((line) => (
               <div
                 key={`${line.productId}-${line.size}`}
-                className="flex gap-4 rounded-xl border border-border bg-card p-4"
+                className="flex gap-4 rounded-xl border border-transparent/10 shadow-md p-4"
               >
-                <Link href={`/shop/details/${line.productId}`} className="shrink-0">
+                <Link
+                  href={`/shop/details/${line.productId}`}
+                  className="shrink-0"
+                >
                   <Image
                     src={line.image}
                     alt={line.name}
@@ -67,9 +72,16 @@ export default function Cart() {
                       </p>
                     </div>
                     <button
-                      onClick={() => dispatch(removeFromCart({ productId: line.productId, size: line.size }))}
+                      onClick={() =>
+                        dispatch(
+                          removeFromCart({
+                            productId: line.productId,
+                            size: line.size,
+                          }),
+                        )
+                      }
                       aria-label={`Remove ${line.name}`}
-                      className="grid size-9 shrink-0 place-items-center rounded-full text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+                      className="grid size-9 shrink-0 place-items-center rounded-full text-primary transition-colors hover:bg-destructive/10 hover:text-destructive"
                     >
                       <Trash2 className="size-4" />
                     </button>
@@ -79,17 +91,31 @@ export default function Cart() {
                     <div className="flex items-center rounded-lg border border-border">
                       <button
                         onClick={() =>
-                          dispatch(updateQuantity({ productId: line.productId, size: line.size, quantity: line.quantity - 1 }))
+                          dispatch(
+                            updateQuantity({
+                              productId: line.productId,
+                              size: line.size,
+                              quantity: line.quantity - 1,
+                            }),
+                          )
                         }
                         className="grid size-9 place-items-center rounded-l-lg hover:bg-secondary"
                         aria-label="Decrease quantity"
                       >
                         <Minus className="size-3.5" />
                       </button>
-                      <span className="w-10 text-center font-bold">{line.quantity}</span>
+                      <span className="w-10 text-center font-bold">
+                        {line.quantity}
+                      </span>
                       <button
                         onClick={() =>
-                          dispatch(updateQuantity({ productId: line.productId, size: line.size, quantity: line.quantity + 1 }))
+                          dispatch(
+                            updateQuantity({
+                              productId: line.productId,
+                              size: line.size,
+                              quantity: line.quantity + 1,
+                            }),
+                          )
                         }
                         className="grid size-9 place-items-center rounded-r-lg hover:bg-secondary"
                         aria-label="Increase quantity"
@@ -98,8 +124,12 @@ export default function Cart() {
                       </button>
                     </div>
                     <div className="text-right">
-                      <p className="text-xs text-muted-foreground">{formatPrice(line.price)} each</p>
-                      <p className="text-xl font-bold">{formatPrice(line.price * line.quantity)}</p>
+                      {/* <p className="text-xs text-muted-foreground">
+                        {formatPrice(line.price)} each
+                      </p> */}
+                      <p className="text-xl font-bold">
+                        {formatPrice(line.price * line.quantity)}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -114,7 +144,7 @@ export default function Cart() {
             </button>
           </div>
 
-          <aside className="h-fit rounded-xl border border-border bg-card p-6 lg:sticky lg:top-24">
+          <aside className="h-fit rounded-xl border border-transparent/10 shadow-md  p-6 lg:sticky lg:top-24">
             <h2 className="text-2xl">Order summary</h2>
             <dl className="mt-5 space-y-3 text-sm">
               <div className="flex justify-between">
@@ -123,19 +153,25 @@ export default function Cart() {
               </div>
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">Shipping</dt>
-                <dd className="font-semibold">{shipping === 0 ? "Free" : formatPrice(shipping)}</dd>
+                <dd className="font-semibold">
+                  {shipping === 0 ? "Free" : formatPrice(shipping)}
+                </dd>
               </div>
-              <div className="border-t border-border pt-3">
+              <div className="border-t border-dashed border-primary pt-3">
                 <div className="flex items-end justify-between">
-                  <dt className="text-sm tracking-[0.18em] text-muted-foreground">GRAND TOTAL</dt>
-                  <dd className="text-3xl font-bold text-primary">{formatPrice(grandTotal)}</dd>
+                  <dt className="text-sm tracking-[0.18em] text-muted-foreground">
+                    GRAND TOTAL
+                  </dt>
+                  <dd className="text-3xl font-bold text-primary">
+                    {formatPrice(grandTotal)}
+                  </dd>
                 </div>
               </div>
             </dl>
-            <Button asChild size="lg" className="mt-6 w-full shadow-brand">
+            <Button asChild size="lg" className="mt-6 w-full shadow-brand text-white rounded">
               <Link href="/checkout">Proceed to checkout</Link>
             </Button>
-            <Button asChild variant="outline" className="mt-3 w-full">
+            <Button asChild variant="outline" className="mt-3 w-full *:shadow-brand text-primary rounded">
               <Link href="/shop">Continue shopping</Link>
             </Button>
           </aside>

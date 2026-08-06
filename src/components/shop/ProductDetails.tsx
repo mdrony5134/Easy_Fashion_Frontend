@@ -33,7 +33,7 @@ export default function ProductDetail({ product }: { product: Product }) {
 
       <div className="mt-6 grid gap-10 lg:grid-cols-2">
         <div>
-          <div className="overflow-hidden rounded-xl border border-border bg-secondary">
+          <div className="overflow-hidden rounded-xl border border-transparent/10 bg-secondary">
             <Image
               key={activeImage}
               src={product.images[activeImage]}
@@ -48,8 +48,8 @@ export default function ProductDetail({ product }: { product: Product }) {
               <button
                 key={`${getImageSrc(image)}-${index}`}
                 onClick={() => setActiveImage(index)}
-                className={`overflow-hidden rounded-lg border-2 transition-colors ${
-                  index === activeImage ? "border-primary" : "border-border hover:border-primary/50"
+                className={`overflow-hidden rounded-xl border-2 transition-colors ${
+                  index === activeImage ? "border-primary" : "border-transparent hover:border-primary/50"
                 }`}
                 aria-label={`View image ${index + 1}`}
               >
@@ -70,14 +70,14 @@ export default function ProductDetail({ product }: { product: Product }) {
             <span className="rounded-full bg-secondary px-3 py-1 text-[11px] font-bold uppercase tracking-[0.16em] text-secondary-foreground">
               {product.category}
             </span>
-            <span className="rounded-full bg-brand-green px-3 py-1 text-[11px] font-bold uppercase tracking-[0.16em] text-brand-green-foreground">
+            <span className="rounded-full bg-brandGreen px-3 py-1 text-[11px] font-bold uppercase tracking-[0.16em] text-white">
               {product.style}
             </span>
-            {product.badge && (
+            {/* {product.badge && (
               <span className="rounded-full bg-primary px-3 py-1 text-[11px] font-bold uppercase tracking-[0.16em] text-primary-foreground">
                 {product.badge}
               </span>
-            )}
+            )} */}
           </div>
 
           <h1 className="mt-4 text-4xl sm:text-6xl">{product.name}</h1>
@@ -86,11 +86,7 @@ export default function ProductDetail({ product }: { product: Product }) {
             <span className="text-4xl font-bold tracking-tight text-primary">
               {formatPrice(product.price)}
             </span>
-            {product.oldPrice && (
-              <span className="pb-1 text-lg text-muted-foreground line-through">
-                {formatPrice(product.oldPrice)}
-              </span>
-            )}
+            
           </div>
 
           <p className="mt-5 text-sm leading-relaxed text-muted-foreground sm:text-base">
@@ -108,8 +104,8 @@ export default function ProductDetail({ product }: { product: Product }) {
                   onClick={() => setSize(option)}
                   className={`min-w-12 rounded-lg border px-4 py-2 text-sm font-bold transition-colors ${
                     option === size
-                      ? "border-primary bg-primary text-primary-foreground"
-                      : "border-border bg-card hover:border-primary"
+                      ? "border-primary bg-primary text-white shadow-sm"
+                      : "border-transparent shadow-sm hover:border-primary"
                   }`}
                 >
                   {option}
@@ -119,7 +115,7 @@ export default function ProductDetail({ product }: { product: Product }) {
           </div>
 
           <div className="mt-7 flex flex-wrap items-center gap-4">
-            <div className="flex items-center rounded-lg border border-border">
+            <div className="flex items-center rounded-lg border border-transparent/10 bg-secondary">
               <button
                 onClick={() => setQuantity((value) => Math.max(1, value - 1))}
                 className="grid size-11 place-items-center rounded-l-lg hover:bg-secondary"
@@ -138,7 +134,7 @@ export default function ProductDetail({ product }: { product: Product }) {
             </div>
             <Button
               size="lg"
-              className="flex-1 shadow-brand"
+              className="flex-1 shadow-brand text-white rounded"
               onClick={() => {
                 dispatch(
                   addToCart({
@@ -159,9 +155,9 @@ export default function ProductDetail({ product }: { product: Product }) {
             </Button>
           </div>
 
-          <div className="mt-8 grid gap-3 rounded-xl border border-border bg-card p-5 sm:grid-cols-3">
+          <div className="mt-8 grid gap-3 rounded-xl border border-transparent/10 bg-secondary p-5 sm:grid-cols-3">
             {[
-              { icon: Truck, text: "Free shipping over $5,000" },
+              { icon: Truck, text: `Free shipping over ৳ 3000` },
               { icon: ShieldCheck, text: "14-day easy exchange" },
               { icon: Check, text: "Authentic EASY product" },
             ].map(({ icon: Icon, text }) => (

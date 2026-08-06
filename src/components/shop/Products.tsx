@@ -93,7 +93,7 @@ export default function Products() {
 
       <div className="mt-8 grid gap-8 lg:grid-cols-[260px_minmax(0,1fr)]">
         <aside
-          className={`${showFilters ? "block animate-fade-in" : "hidden"} h-fit rounded-xl border border-border bg-card p-5 lg:sticky lg:top-24 lg:block`}
+          className={`${showFilters ? "block animate-fade-in" : "hidden"} h-fit rounded-xl border-transparent/80 shadow-md p-5 lg:sticky lg:top-24 lg:block`}
         >
           <div className="flex items-center justify-between gap-2">
             <h2 className="text-xl">Filters</h2>

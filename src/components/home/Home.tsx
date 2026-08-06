@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { ArrowRight, Layers, Ruler, Shirt, Sparkles } from "lucide-react";
+import { ArrowRight, Layers, Ruler, Shirt } from "lucide-react";
+import { GiClothes } from "react-icons/gi";
 
 import { HeroCarousel } from "@/components/home/HeroCarousel";
 import { ProductCard } from "@/components/shop/ProductCard";
@@ -10,7 +11,7 @@ const SUMMARY = [
   { label: "Total Categories", value: CATEGORIES.length, icon: Layers, note: "Curated lines" },
   { label: "Total Products", value: PRODUCTS.length, icon: Shirt, note: "In stock now" },
   { label: "Available Sizes", value: SIZES.length, icon: Ruler, note: "XS to XXL & numeric" },
-  { label: "Available Styles", value: STYLES.length, icon: Sparkles, note: "Casual to formal" },
+  { label: "Available Styles", value: STYLES.length, icon: GiClothes, note: "Casual to formal" },
 ];
 
 export default function Home() {

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { GoDotFill } from "react-icons/go";
 import { TbCurrencyTaka } from "react-icons/tb";
+import { GiClothes } from "react-icons/gi";
 
 const slides = [
   {
@@ -67,7 +68,7 @@ export function HeroCarousel() {
         <div className="container mx-auto relative flex h-full flex-col justify-center px-4 sm:px-6">
           <div key={active} className="animate-fade-up max-w-xl text-white">
             <span className="inline-flex items-center gap-2 rounded-full bg-brandGreen px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-white">
-              <Sparkles className="h-3.5 w-3.5" /> {slides[active]!.tag}
+              <GiClothes className="h-3.5 w-3.5" /> {slides[active]!.tag}
             </span>
             <h1 className="mt-5 text-4xl font-display font-normal leading-[0.9] tracking-wider sm:text-6xl lg:text-7xl text-white uppercase">
               {slides[active]!.title}
