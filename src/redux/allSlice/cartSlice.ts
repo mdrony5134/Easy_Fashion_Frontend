@@ -20,7 +20,11 @@ const initialState: CartState = {
 };
 
 type AddToCartPayload = Omit<CartItem, "quantity"> & { quantity?: number };
-type UpdateQuantityPayload = { productId: string; size: string; quantity: number };
+type UpdateQuantityPayload = {
+  productId: string;
+  size: string;
+  quantity: number;
+};
 
 const SHIPPING_THRESHOLD = 5000;
 const SHIPPING_FEE = 150;
@@ -33,7 +37,8 @@ const cartSlice = createSlice({
       const incoming = action.payload;
       const amountToAdd = incoming.quantity ?? 1;
       const existingItem = state.items.find(
-        (item) => item.productId === incoming.productId && item.size === incoming.size,
+        (item) =>
+          item.productId === incoming.productId && item.size === incoming.size,
       );
 
       if (existingItem) {
@@ -51,14 +56,20 @@ const cartSlice = createSlice({
     },
     updateQuantity: (state, action: PayloadAction<UpdateQuantityPayload>) => {
       const item = state.items.find(
-        (entry) => entry.productId === action.payload.productId && entry.size === action.payload.size,
+        (entry) =>
+          entry.productId === action.payload.productId &&
+          entry.size === action.payload.size,
       );
 
       if (!item) return;
 
       if (action.payload.quantity <= 0) {
         state.items = state.items.filter(
-          (entry) => !(entry.productId === action.payload.productId && entry.size === action.payload.size),
+          (entry) =>
+            !(
+              entry.productId === action.payload.productId &&
+              entry.size === action.payload.size
+            ),
         );
         return;
       }
@@ -67,9 +78,16 @@ const cartSlice = createSlice({
         ? Math.min(item.maxQuantity, action.payload.quantity)
         : action.payload.quantity;
     },
-    removeFromCart: (state, action: PayloadAction<{ productId: string; size: string }>) => {
+    removeFromCart: (
+      state,
+      action: PayloadAction<{ productId: string; size: string }>,
+    ) => {
       state.items = state.items.filter(
-        (item) => !(item.productId === action.payload.productId && item.size === action.payload.size),
+        (item) =>
+          !(
+            item.productId === action.payload.productId &&
+            item.size === action.payload.size
+          ),
       );
     },
     clearCart: (state) => {
@@ -82,11 +100,20 @@ export const selectCartItems = (state: RootState) => state.cart.items;
 export const selectCartCount = (state: RootState) =>
   state.cart.items.reduce((total, item) => total + item.quantity, 0);
 export const selectCartSubtotal = (state: RootState) =>
-  state.cart.items.reduce((total, item) => total + item.price * item.quantity, 0);
+  state.cart.items.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0,
+  );
 export const selectCartShipping = (state: RootState) =>
-  selectCartSubtotal(state) >= SHIPPING_THRESHOLD ? 0 : state.cart.items.length > 0 ? SHIPPING_FEE : 0;
-export const selectCartGrandTotal = (state: RootState) => selectCartSubtotal(state) + selectCartShipping(state);
+  selectCartSubtotal(state) >= SHIPPING_THRESHOLD
+    ? 0
+    : state.cart.items.length > 0
+      ? SHIPPING_FEE
+      : 0;
+export const selectCartGrandTotal = (state: RootState) =>
+  selectCartSubtotal(state) + selectCartShipping(state);
 
-export const { addToCart, updateQuantity, removeFromCart, clearCart } = cartSlice.actions;
+export const { addToCart, updateQuantity, removeFromCart, clearCart } =
+  cartSlice.actions;
 
 export default cartSlice.reducer;
