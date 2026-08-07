@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 
-import Home from "@/components/home/Home";
+import HeroCarousel from "@/components/home/HeroCarousel";
+import FeatureProduct from "@/components/home/FeatureProducts";
+import OfferCard from "@/components/home/OfferCard";
 
 export const metadata: Metadata = {
   title: "EASY Fashion — Modern Wardrobe Essentials Online",
@@ -8,5 +10,11 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <Home />;
+  return (
+    <div>
+      <HeroCarousel />
+      <FeatureProduct />
+      <OfferCard/>
+    </div>
+  );
 }

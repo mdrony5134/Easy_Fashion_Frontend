@@ -2,23 +2,13 @@
 import Link from "next/link";
 import { ArrowRight, Layers, Ruler, Shirt, AlertCircle } from "lucide-react";
 import { GiClothes } from "react-icons/gi";
-
-import { HeroCarousel } from "@/components/home/HeroCarousel";
 import { ProductCard } from "@/components/shop/ProductCard";
 import { Button } from "@/components/ui/button";
-import { CATEGORIES, PRODUCTS, SIZES, STYLES, type Product } from "@/lib/product";
-import { useGetProductListQuery } from "@/redux/api/productApi";
+import { type Product } from "@/lib/product";
+import { useGetHomeSummaryQuery } from "@/redux/api/productApi";
 import { ApiProduct, ApiSize } from "@/types/productTypes";
 
-const SUMMARY = [
-  { label: "Total Categories", value: CATEGORIES.length, icon: Layers, note: "Curated lines" },
-  { label: "Total Products", value: PRODUCTS.length, icon: Shirt, note: "In stock now" },
-  { label: "Available Sizes", value: SIZES.length, icon: Ruler, note: "XS to XXL & numeric" },
-  { label: "Available Styles", value: STYLES.length, icon: GiClothes, note: "Casual to formal" },
-];
-
-
-// Helper function
+// Helper function to transform API product
 const transformApiProduct = (apiProduct: ApiProduct): Product => {
   return {
     id: apiProduct._id,
@@ -33,19 +23,49 @@ const transformApiProduct = (apiProduct: ApiProduct): Product => {
   };
 };
 
-export default function Home() {
-  const { data: getAllProductsData, isLoading, error } = useGetProductListQuery({
-    page: 1,
-    limit: 12,
-  });
+export default function FeatureProduct() {
+  const {
+    data: getHomeSummaryData,
+    isLoading,
+    error,
+  } = useGetHomeSummaryQuery({});
+  const summaryData = getHomeSummaryData?.data;
 
-  const featuredProducts: Product[] = getAllProductsData?.data?.map((item: ApiProduct) => 
-    transformApiProduct(item)
-  ) || [];
-  
+  const SUMMARY = [
+    {
+      label: "Total Categories",
+      value: summaryData?.totalCategories || 0,
+      icon: Layers,
+      note: "Curated lines",
+    },
+    {
+      label: "Total Products",
+      value: summaryData?.totalProducts || 0,
+      icon: Shirt,
+      note: "In stock now",
+    },
+    {
+      label: "Available Sizes",
+      value: summaryData?.availableSizes || 0,
+      icon: Ruler,
+      note: "XS to XXL & numeric",
+    },
+    {
+      label: "Available Styles",
+      value: summaryData?.availableStyles || 0,
+      icon: GiClothes,
+      note: "Casual to formal",
+    },
+  ];
+
+  const featuredProducts: Product[] =
+    summaryData?.featuredProducts?.map((item: ApiProduct) =>
+      transformApiProduct(item),
+    ) || [];
+
   const displayProducts = featuredProducts.length > 0 ? featuredProducts : [];
 
-  console.log("getAllProductsData", getAllProductsData);
+  // console.log("Home Summary Data:", getHomeSummaryData);
 
   if (isLoading) {
     return (
@@ -65,7 +85,7 @@ export default function Home() {
 
   if (error) {
     return (
-      <div className="container mx-auto px-4 py-16 text-center">
+      <div className="container mx-auto px-4 py-16 text-center border border-dashed border-primary/20 rounded-xl mt-10">
         <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-red-50 mb-6">
           <AlertCircle className="w-10 h-10 text-red-500" />
         </div>
@@ -81,8 +101,6 @@ export default function Home() {
 
   return (
     <div>
-      <HeroCarousel />
-
       <section className="container mx-auto px-4 py-16 sm:px-6">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {SUMMARY.map(({ label, value, icon: Icon, note }) => (
@@ -96,7 +114,9 @@ export default function Home() {
               <p className="mt-1 text-sm font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                 {label}
               </p>
-              <p className="mt-2 text-xs text-brand-green-foreground/70">{note}</p>
+              <p className="mt-2 text-xs text-brand-green-foreground/70">
+                {note}
+              </p>
             </div>
           ))}
         </div>
@@ -108,10 +128,16 @@ export default function Home() {
             <p className="text-xs font-bold uppercase tracking-[0.24em] text-primary">
               Featured edit
             </p>
-            <h2 className="mt-2 text-4xl font-display uppercase tracking-wider sm:text-5xl">FRESH OFF THE RAIL</h2>
+            <h2 className="mt-2 text-4xl font-display uppercase tracking-wider sm:text-5xl">
+              FRESH OFF THE RAIL
+            </h2>
           </div>
           {displayProducts.length > 0 && (
-            <Button asChild variant="outline" className="shrink-0 rounded-md border-border bg-white text-black hover:bg-gray-50">
+            <Button
+              asChild
+              variant="outline"
+              className="shrink-0 rounded-md border-border bg-white text-black hover:bg-gray-50"
+            >
               <Link href="/shop">
                 Shop all <ArrowRight className="size-4" />
               </Link>
@@ -134,47 +160,17 @@ export default function Home() {
               No Featured Products Available
             </h3>
             <p className="text-gray-500 max-w-md mx-auto mb-6">
-              We're currently updating our collection. Please check back later for our latest arrivals.
+              We're currently updating our collection. Please check back later
+              for our latest arrivals.
             </p>
-            <Button asChild className="bg-primary text-white hover:bg-primary/90">
-              <Link href="/shop">
-                Browse Collection
-              </Link>
+            <Button
+              asChild
+              className="bg-primary text-white hover:bg-primary/90"
+            >
+              <Link href="/shop">Browse Collection</Link>
             </Button>
           </div>
         )}
-      </section>
-
-      <section className="container mx-auto mt-20 px-4 sm:px-6">
-        <div className="grid gap-4 md:grid-cols-3">
-          {[
-            { title: "Season Sale", copy: "Up to 30% off selected denim & shirting.", tone: "brand" },
-            { title: "New In", copy: "Party-ready dresses in signature red.", tone: "ink" },
-            { title: "Streetwear", copy: "Heavyweight hoodies built for layering.", tone: "green" },
-          ].map((card) => (
-            <div
-              key={card.title}
-              className={`hover-lift flex min-h-44 flex-col justify-between rounded-xl p-7 ${
-                card.tone === "brand"
-                  ? "bg-primary text-white"
-                  : card.tone === "ink"
-                    ? "bg-black/80 text-white"
-                    : "bg-brandGreen text-secondary"
-              }`}
-            >
-              <h3 className="text-3xl">{card.title}</h3>
-              <div>
-                <p className="text-sm opacity-90">{card.copy}</p>
-                <Link
-                  href="/shop"
-                  className="mt-4 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] underline-offset-4 hover:underline"
-                >
-                  Shop now <ArrowRight className="size-3.5" />
-                </Link>
-              </div>
-            </div>
-          ))}
-        </div>
       </section>
     </div>
   );
