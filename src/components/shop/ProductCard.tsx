@@ -16,7 +16,7 @@ export function ProductCard({ product }: { product: Product }) {
   const primaryImage = getImageSrc(product.images[0]!);
 
   return (
-    <article className="group hover-lift flex flex-col overflow-hidden rounded-xl bg-white shadow-sm transition-shadow hover:shadow-md">
+    <article className="group hover-lift flex flex-col overflow-hidden rounded-xl bg-white shadow transition-shadow hover:shadow-md">
       <Link href={`/shop/details/${product.id}`} className="relative block overflow-hidden bg-secondary">
         <Image
           src={product.images[0]}
@@ -25,14 +25,14 @@ export function ProductCard({ product }: { product: Product }) {
           height={1280}
           className="aspect-4/5 w-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
-        {product.badge && (
-          <span className="absolute left-3 top-3 rounded-full bg-primary px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-primary-foreground">
-            {product.badge}
+        {product.style && (
+          <span className="absolute left-3 top-3 rounded-full bg-primary px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-white">
+            {product.style}
           </span>
         )}
-        <span className="absolute right-3 top-3 rounded-full bg-brand-green px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-brand-green-foreground">
+        {/* <span className="absolute right-3 top-3 rounded-full bg-brand-green px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-brand-green-foreground">
           {product.style}
-        </span>
+        </span> */}
       </Link>
 
       <div className="flex flex-1 flex-col gap-3 p-4">

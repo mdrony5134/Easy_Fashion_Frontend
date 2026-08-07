@@ -1,6 +1,6 @@
 import baseApi from "./baseApi";
 
-const userApi = baseApi.injectEndpoints({
+const orderApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getMyOrders: builder.query({
       query: () => ({
@@ -14,4 +14,4 @@ const userApi = baseApi.injectEndpoints({
 
 export const {
     useGetMyOrdersQuery,
-} = userApi;
+} = orderApi;

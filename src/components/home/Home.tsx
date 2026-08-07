@@ -1,11 +1,14 @@
+"use client";
 import Link from "next/link";
-import { ArrowRight, Layers, Ruler, Shirt } from "lucide-react";
+import { ArrowRight, Layers, Ruler, Shirt, AlertCircle } from "lucide-react";
 import { GiClothes } from "react-icons/gi";
 
 import { HeroCarousel } from "@/components/home/HeroCarousel";
 import { ProductCard } from "@/components/shop/ProductCard";
 import { Button } from "@/components/ui/button";
-import { CATEGORIES, PRODUCTS, SIZES, STYLES } from "@/lib/product";
+import { CATEGORIES, PRODUCTS, SIZES, STYLES, type Product } from "@/lib/product";
+import { useGetProductListQuery } from "@/redux/api/productApi";
+import { ApiProduct, ApiSize } from "@/types/productTypes";
 
 const SUMMARY = [
   { label: "Total Categories", value: CATEGORIES.length, icon: Layers, note: "Curated lines" },
@@ -14,8 +17,67 @@ const SUMMARY = [
   { label: "Available Styles", value: STYLES.length, icon: GiClothes, note: "Casual to formal" },
 ];
 
+
+// Helper function
+const transformApiProduct = (apiProduct: ApiProduct): Product => {
+  return {
+    id: apiProduct._id,
+    name: apiProduct.name,
+    category: apiProduct.category?.name || "Uncategorized",
+    style: apiProduct.style?.name || "Uncategorized",
+    sizes: apiProduct.sizes?.map((size: ApiSize) => size.name) || [],
+    price: apiProduct.price,
+    images: apiProduct.images || [],
+    description: apiProduct.description || "",
+    badge: apiProduct.badge || undefined,
+  };
+};
+
 export default function Home() {
-  const featured = PRODUCTS.slice(0, 8);
+  const { data: getAllProductsData, isLoading, error } = useGetProductListQuery({
+    page: 1,
+    limit: 12,
+  });
+
+  const featuredProducts: Product[] = getAllProductsData?.data?.map((item: ApiProduct) => 
+    transformApiProduct(item)
+  ) || [];
+  
+  const displayProducts = featuredProducts.length > 0 ? featuredProducts : [];
+
+  console.log("getAllProductsData", getAllProductsData);
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto px-4 py-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[...Array(8)].map((_, i) => (
+            <div key={i} className="animate-pulse">
+              <div className="bg-gray-200 aspect-[4/5] rounded-xl mb-4"></div>
+              <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+              <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mx-auto px-4 py-16 text-center">
+        <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-red-50 mb-6">
+          <AlertCircle className="w-10 h-10 text-red-500" />
+        </div>
+        <h3 className="text-2xl font-semibold text-gray-900 mb-2">
+          Unable to Load Products
+        </h3>
+        <p className="text-gray-500 max-w-md mx-auto">
+          We're experiencing technical difficulties. Please try again later.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -48,18 +110,39 @@ export default function Home() {
             </p>
             <h2 className="mt-2 text-4xl font-display uppercase tracking-wider sm:text-5xl">FRESH OFF THE RAIL</h2>
           </div>
-          <Button asChild variant="outline" className="shrink-0 rounded-md border-border bg-white text-black hover:bg-gray-50">
-            <Link href="/shop">
-              Shop all <ArrowRight className="size-4" />
-            </Link>
-          </Button>
+          {displayProducts.length > 0 && (
+            <Button asChild variant="outline" className="shrink-0 rounded-md border-border bg-white text-black hover:bg-gray-50">
+              <Link href="/shop">
+                Shop all <ArrowRight className="size-4" />
+              </Link>
+            </Button>
+          )}
         </div>
 
-        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {featured.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        {displayProducts.length > 0 ? (
+          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {displayProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        ) : (
+          <div className="mt-12 text-center py-16 px-4 border-2 border-dashed border-primary/20 rounded-xl">
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-amber-50 mb-6">
+              <AlertCircle className="w-10 h-10 text-amber-500" />
+            </div>
+            <h3 className="text-2xl font-semibold text-gray-900 mb-2">
+              No Featured Products Available
+            </h3>
+            <p className="text-gray-500 max-w-md mx-auto mb-6">
+              We're currently updating our collection. Please check back later for our latest arrivals.
+            </p>
+            <Button asChild className="bg-primary text-white hover:bg-primary/90">
+              <Link href="/shop">
+                Browse Collection
+              </Link>
+            </Button>
+          </div>
+        )}
       </section>
 
       <section className="container mx-auto mt-20 px-4 sm:px-6">
@@ -73,10 +156,10 @@ export default function Home() {
               key={card.title}
               className={`hover-lift flex min-h-44 flex-col justify-between rounded-xl p-7 ${
                 card.tone === "brand"
-                  ? "bg-primary text-primary-foreground"
+                  ? "bg-primary text-white"
                   : card.tone === "ink"
-                    ? "bg-ink text-ink-foreground"
-                    : "bg-brand-green text-brand-green-foreground"
+                    ? "bg-black/80 text-white"
+                    : "bg-brandGreen text-secondary"
               }`}
             >
               <h3 className="text-3xl">{card.title}</h3>
