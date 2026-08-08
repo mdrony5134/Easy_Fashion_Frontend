@@ -200,7 +200,7 @@ export default function Products() {
                 Unable to Load Products
               </h3>
               <p className="text-gray-500 max-w-md mx-auto">
-                We're experiencing technical difficulties. Please try again
+                We&apos;re experiencing technical difficulties. Please try again
                 later.
               </p>
               <Button

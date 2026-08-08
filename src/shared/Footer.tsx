@@ -1,5 +1,3 @@
-import Image from "next/image";
-import Link from "next/link";
 import {
   Facebook,
   Instagram,
@@ -9,6 +7,8 @@ import {
   Twitter,
   Youtube,
 } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 import { TbCurrencyTaka } from "react-icons/tb";
 
 import logo from "@/assets/logo.webp";
@@ -46,8 +46,16 @@ export function Footer() {
             </li>
             <li>About EASY</li>
             <li>Careers</li>
-            <li>Store locator</li>
-            <li>Size guide</li>
+            {/* <li>Store locator</li>
+            <li>Size guide</li> */}
+            <li>
+              <Link
+                href="/privacy-policy"
+                className="transition-colors hover:text-primary"
+              >
+                Privacy Policy
+              </Link>
+            </li>
           </ul>
         </div>
 

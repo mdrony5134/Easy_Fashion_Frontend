@@ -162,8 +162,6 @@ export default function LoginPage() {
             Please enter your credentials to log in to your account.
           </p>
         </div>
-
-        {/* General Error Message */}
         {errors.general && (
           <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
             {errors.general}
@@ -226,14 +224,14 @@ export default function LoginPage() {
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
             </div>
-            <div className="text-right mt-2">
+            {/* <div className="text-right mt-2">
               <Link
                 href="/forgot-password"
                 className="text-primary hover:text-primary text-sm disabled:opacity-50"
               >
                 Forgot password?
               </Link>
-            </div>
+            </div> */}
             {errors.password && (
               <p className="text-red-500 text-sm mt-1">{errors.password}</p>
             )}
