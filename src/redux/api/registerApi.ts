@@ -19,9 +19,17 @@ const registerApi = baseApi.injectEndpoints({
       invalidatesTags: ["User"],
     }),
 
-    userStore: builder.mutation({
+    userGoogleLogin: builder.mutation({
       query: (data) => ({
-        url: `/auth/social/login`,
+        url: `/auth/google`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["User"],
+    }),
+    userFacebookLogin: builder.mutation({
+      query: (data) => ({
+        url: `/auth/facebook`,
         method: "POST",
         body: data,
       }),
@@ -33,5 +41,6 @@ const registerApi = baseApi.injectEndpoints({
 export const {
   useUserRegistrationMutation,
   useUserLoginMutation,
-  useUserStoreMutation
+  useUserGoogleLoginMutation,
+  useUserFacebookLoginMutation,
 } = registerApi;

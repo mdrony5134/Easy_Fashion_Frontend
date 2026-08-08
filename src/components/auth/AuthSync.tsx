@@ -1,6 +1,9 @@
 "use client";
 
-import { useUserStoreMutation } from "@/redux/api/registerApi";
+import {
+  useUserFacebookLoginMutation,
+  useUserGoogleLoginMutation,
+} from "@/redux/api/registerApi";
 import Cookies from "js-cookie";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -9,7 +12,8 @@ import { toast } from "sonner";
 
 export const AuthSync = () => {
   const { data: session, status } = useSession();
-  const [storeUser] = useUserStoreMutation();
+  const [storeUser] = useUserGoogleLoginMutation();
+  const [storeFacebookUser] = useUserFacebookLoginMutation();
   const router = useRouter();
 
   const [isStoringUser, setIsStoringUser] = useState(false);
@@ -17,12 +21,10 @@ export const AuthSync = () => {
   useEffect(() => {
     const syncUserToken = async () => {
       const isGoogleSignIn = localStorage.getItem("googleSignIn");
+      const isFacebookSignIn = localStorage.getItem("facebookSignIn");
 
       const name = session?.user?.name ?? "";
-      const [firstName, ...lastNameParts] = name.split(" ");
-      const lastName = lastNameParts.join(" ");
 
-      // Only sync if user clicked Google login
       if (status === "authenticated" && session?.user && isGoogleSignIn) {
         const existingToken = Cookies.get("accessToken");
 
@@ -30,30 +32,58 @@ export const AuthSync = () => {
           setIsStoringUser(true);
           try {
             const response = await storeUser({
-              firstName: firstName,
-              lastName: lastName,
+              provider: "GOOGLE",
+              fullName: name,
               email: session.user.email,
             }).unwrap();
 
-            if (response?.result?.accessToken) {
-              Cookies.set("accessToken", response.result.accessToken);
+            if (response?.data?.accessToken) {
+              Cookies.set("accessToken", response.data.accessToken);
               toast.success("Google login synced successfully!");
               router.push("/");
             }
-          } catch (error) {
-            console.error("Failed to sync token:", error);
-            toast.error("Failed to sync Google account!");
+          } catch (error: any) {
+            // console.error("Failed to sync token:", error);
+            toast.error(error.message || "Failed to sync Google account!");
           } finally {
             setIsStoringUser(false);
-            // Clear flag to prevent auto-sync again
             localStorage.removeItem("googleSignIn");
+          }
+        }
+      } else if (
+        status === "authenticated" &&
+        session?.user &&
+        isFacebookSignIn
+      ) {
+        const existingToken = Cookies.get("accessToken");
+
+        if (!existingToken) {
+          setIsStoringUser(true);
+          try {
+            const response = await storeFacebookUser({
+              provider: "FACEBOOK",
+              fullName: name,
+              email: session.user.email,
+            }).unwrap();
+
+            if (response?.data?.accessToken) {
+              Cookies.set("accessToken", response.data.accessToken);
+              toast.success("Facebook login synced successfully!");
+              router.push("/");
+            }
+          } catch (error: any) {
+            // console.error("Failed to sync token:", error);
+            toast.error(error.message || "Failed to sync Facebook account!");
+          } finally {
+            setIsStoringUser(false);
+            localStorage.removeItem("facebookSignIn");
           }
         }
       }
     };
 
     syncUserToken();
-  }, [status, session, storeUser, router]);
+  }, [status, session, storeUser, storeFacebookUser, router]);
 
   return (
     <>

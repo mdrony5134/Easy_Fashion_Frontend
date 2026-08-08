@@ -1,12 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import logo from "@/assets/logo.webp";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useUserRegistrationMutation } from "@/redux/api/registerApi";
-import { Eye, EyeOff, User, Mail, Phone, Lock, UserPlus } from "lucide-react";
+import { signUpSchema } from "@/schema/SignUpSchema";
+import { Eye, EyeOff, Lock, Mail, Phone, User, UserPlus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -14,8 +14,6 @@ import type React from "react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
-import logo from "@/assets/logo.webp";
-import { signUpSchema } from "@/schema/SignUpSchema";
 
 type SignUpFormData = z.infer<typeof signUpSchema>;
 
@@ -114,7 +112,7 @@ export default function SignUpPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-primary/5 to-white">
-      <div className="max-w-2xl w-full space-y-8 bg-white border border-[#ADADAD40] rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-shadow duration-300">
+      <div className="max-w-2xl w-full space-y-8 bg-white border border-[#ADADAD40] rounded-3xl p-8 shadow-sm">
         {/* Logo and Header */}
         <div className="text-center">
           <div className="flex justify-center mb-4">

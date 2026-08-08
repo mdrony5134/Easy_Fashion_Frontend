@@ -1,6 +1,8 @@
 # Easy Fashion Frontend
 
-An elegant, high-performance frontend for the Easy Fashion e-commerce platform. Built with Next.js, React, Tailwind CSS, and Redux Toolkit.
+I have build frontend for the Easy Fashion e-commerce platform. Built with Next.js, React, Tailwind CSS, and Redux Toolkit.
+
+## Website Link: https://easy-fashion-frontend.vercel.app
 
 ## Tech Stack
 

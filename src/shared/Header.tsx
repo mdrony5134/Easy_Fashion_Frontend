@@ -7,7 +7,6 @@ import { selectCartCount } from "@/redux/allSlice/cartSlice";
 import { useAppSelector } from "@/redux/store";
 import Cookies from "js-cookie";
 import { Menu, ShoppingBag, User, X } from "lucide-react";
-import { signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -153,7 +152,7 @@ export function Header() {
                 onClick={() => setOpen(false)}
                 className="text-sm font-semibold uppercase tracking-[0.14em] text-primary"
               >
-                Sign in / Register
+                Sign in
               </Link>
             )}
           </nav>
