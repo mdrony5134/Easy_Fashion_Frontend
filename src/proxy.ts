@@ -68,5 +68,6 @@ export const config = {
   matcher: [
     "/login",
     "/checkout/:path*",
+    "/profile/:path*",
   ],
 };

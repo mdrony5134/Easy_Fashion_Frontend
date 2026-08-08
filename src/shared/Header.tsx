@@ -46,9 +46,8 @@ export function Header() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`text-sm font-semibold uppercase tracking-[0.14em] transition-colors hover:text-primary ${
-                  isActive ? "text-red-500" : "text-muted-foreground"
-                }`}
+                className={`text-sm font-semibold uppercase tracking-[0.14em] transition-colors hover:text-primary ${isActive ? "text-red-500" : "text-muted-foreground"
+                  }`}
               >
                 {item.label}
               </Link>
@@ -119,9 +118,8 @@ export function Header() {
                   key={item.href}
                   href={item.href}
                   onClick={() => setOpen(false)}
-                  className={`text-sm font-semibold uppercase tracking-[0.14em] ${
-                    isActive ? "text-red-500" : "text-foreground"
-                  }`}
+                  className={`text-sm font-semibold uppercase tracking-[0.14em] ${isActive ? "text-red-500" : "text-foreground"
+                    }`}
                 >
                   {item.label}
                 </Link>
@@ -150,7 +148,7 @@ export function Header() {
               <Link
                 href="/login"
                 onClick={() => setOpen(false)}
-                className="text-sm font-semibold uppercase tracking-[0.14em] text-primary"
+                className="text-sm font-semibold uppercase tracking-[0.14em] bg-primary text-white rounded"
               >
                 Sign in
               </Link>
