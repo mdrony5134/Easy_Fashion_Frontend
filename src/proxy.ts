@@ -45,7 +45,7 @@ export default function proxy(request: NextRequest) {
 
 
     if (role === "CUSTOMER") {
-      const customerAllowedRoutes = ["/checkout"];
+      const customerAllowedRoutes = ["/checkout", "/profile"];
       const hasAccess = customerAllowedRoutes.some((route) =>
         currentPath.startsWith(route),
       );
