@@ -1,8 +1,37 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Easy Fashion Frontend
+
+An elegant, high-performance frontend for the Easy Fashion e-commerce platform. Built with Next.js, React, Tailwind CSS, and Redux Toolkit.
+
+## Tech Stack
+
+- **Framework:** [Next.js](https://nextjs.org) (App Router)
+- **UI Library:** React
+- **Styling:** Tailwind CSS, shadcn/ui components
+- **State Management:** Redux Toolkit (RTK Query)
+- **Icons:** Lucide React, React Icons
+- **Authentication:** Custom JWT-based auth via cookies
+
+## Features
+
+- **Modern E-Commerce UI:** Premium look with beautiful carousels and smooth micro-interactions.
+- **Product Listing & Filtering:** High-performance shop pages.
+- **Cart Management:** Redux-powered responsive cart state.
+- **User Profiles:** Integrated auth with user profiles, order tracking, and history.
+- **Fully Responsive:** Beautifully designed across desktop, tablet, and mobile displays.
 
 ## Getting Started
 
-First, run the development server:
+First, install the dependencies:
+
+```bash
+npm install
+# or
+yarn install
+# or
+pnpm install
+```
+
+Then, run the development server:
 
 ```bash
 npm run dev
@@ -10,29 +39,22 @@ npm run dev
 yarn dev
 # or
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the application.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Ensure you have your `.env` configured properly (e.g., pointing to your backend API URL). Example:
 
-## Learn More
+```env
+NEXT_PUBLIC_API_URL=https://easy-fashion-backend.vercel.app/api
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Directory Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-
-# Easy_Fashion_Frontend
+- `src/app/`: Next.js App Router pages (Home, Shop, Profile, etc.)
+- `src/components/`: Reusable UI components organized by feature (home, shop, profile, ui).
+- `src/redux/`: Global state management slices and RTK Query API endpoints.
+- `src/shared/`: Global components like Header and Footer.
+- `src/types/`: Shared TypeScript type definitions.

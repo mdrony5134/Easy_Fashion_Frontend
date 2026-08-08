@@ -1,16 +1,17 @@
 "use client";
 
-import { Menu, ShoppingBag, User, X } from "lucide-react";
-import { signOut } from "next-auth/react";
-import Image from "next/image";
-import Link from "next/link";
-import { useState } from "react";
 import logo from "@/assets/logo.webp";
+import profileImage from "@/assets/profile.png";
 import { Button } from "@/components/ui/button";
 import { selectCartCount } from "@/redux/allSlice/cartSlice";
 import { useAppSelector } from "@/redux/store";
 import Cookies from "js-cookie";
-import profileImage from "@/assets/profile.png";
+import { Menu, ShoppingBag, User, X } from "lucide-react";
+import { signOut } from "next-auth/react";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
 
 const NAV = [
   { href: "/", label: "Home" },
@@ -19,12 +20,13 @@ const NAV = [
 ];
 
 export function Header() {
+  const pathname = usePathname();
   const cartCount = useAppSelector(selectCartCount);
   const [open, setOpen] = useState(false);
   const token = Cookies.get("accessToken");
 
   return (
-    <header className="sticky top-0 z-50 border-b border-transparent/10 bg-secondary/85 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 border-b border-transparent/10 bg-secondary/30 backdrop-blur-xl">
       <div className="container mx-auto grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 py-3 sm:px-6 lg:grid-cols-[auto_1fr_auto]">
         <Link href="/" className="flex min-w-0 items-center gap-2">
           <Image
@@ -36,15 +38,23 @@ export function Header() {
         </Link>
 
         <nav className="hidden items-center justify-center gap-8 lg:flex">
-          {NAV.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="text-sm font-semibold uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:text-primary"
-            >
-              {item.label}
-            </Link>
-          ))}
+          {NAV.map((item) => {
+            const isActive =
+              item.href === "/"
+                ? pathname === "/"
+                : pathname.startsWith(item.href);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`text-sm font-semibold uppercase tracking-[0.14em] transition-colors hover:text-primary ${
+                  isActive ? "text-red-500" : "text-muted-foreground"
+                }`}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="flex items-center justify-end gap-1 sm:gap-2">
@@ -98,18 +108,26 @@ export function Header() {
       </div>
 
       {open && (
-        <div className="animate-fade-in border-t border-border bg-background px-4 py-4 lg:hidden">
+        <div className="animate-fade-in bg-background px-4 py-4 lg:hidden">
           <nav className="flex flex-col gap-3">
-            {NAV.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setOpen(false)}
-                className="text-sm font-semibold uppercase tracking-[0.14em] text-foreground"
-              >
-                {item.label}
-              </Link>
-            ))}
+            {NAV.map((item) => {
+              const isActive =
+                item.href === "/"
+                  ? pathname === "/"
+                  : pathname.startsWith(item.href);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  className={`text-sm font-semibold uppercase tracking-[0.14em] ${
+                    isActive ? "text-red-500" : "text-foreground"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
             {token ? (
               <>
                 <Link
@@ -128,15 +146,6 @@ export function Header() {
                   </div>
                   Profile
                 </Link>
-                <button
-                  className="text-left text-sm font-semibold uppercase tracking-[0.14em] text-primary"
-                  onClick={() => {
-                    signOut({ callbackUrl: "/" });
-                    setOpen(false);
-                  }}
-                >
-                  Log out
-                </button>
               </>
             ) : (
               <Link

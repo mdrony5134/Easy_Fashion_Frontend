@@ -1,12 +1,12 @@
 "use client";
 
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { GiClothes } from "react-icons/gi";
 import { GoDotFill } from "react-icons/go";
 import { TbCurrencyTaka } from "react-icons/tb";
-import { GiClothes } from "react-icons/gi";
 
 const slides = [
   {
@@ -18,7 +18,7 @@ const slides = [
   },
   {
     tag: "Limited Drop",
-    title: "Street Essentials 02",
+    title: "Street Essentials",
     copy: "Heavyweight fleece, boxy fits and prints from our Dhaka studio.",
     image:
       "https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=1600&q=80",
@@ -45,7 +45,7 @@ export function HeroCarousel() {
 
   return (
     <div>
-      <section className="relative h-[78vh] min-h-[520px] w-full overflow-hidden">
+      <section className="relative h-[65vh] md:h-[78vh] min-h-[400px] md:min-h-[520px] w-full overflow-hidden">
         {slides.map((slide, index) => (
           <div
             key={slide.title}
@@ -70,13 +70,13 @@ export function HeroCarousel() {
             <span className="inline-flex items-center gap-2 rounded-full bg-brandGreen px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-white">
               <GiClothes className="h-3.5 w-3.5" /> {slides[active]!.tag}
             </span>
-            <h1 className="mt-5 text-4xl font-display font-normal leading-[0.9] tracking-wider sm:text-6xl lg:text-7xl text-white uppercase">
+            <h1 className="mt-4 md:mt-5 text-4xl font-display font-normal leading-[0.9] tracking-wider sm:text-6xl lg:text-7xl text-white uppercase">
               {slides[active]!.title}
             </h1>
-            <p className="mt-4 max-w-md text-base text-white/90 sm:text-lg">
+            <p className="mt-3 md:mt-4 max-w-md text-base text-white/90 sm:text-lg">
               {slides[active]!.copy}
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-6 md:mt-8 flex flex-wrap gap-3">
               <Link
                 href="/shop"
                 className="inline-flex items-center gap-2 rounded-full bg-primary border border-primary px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-primary/90"

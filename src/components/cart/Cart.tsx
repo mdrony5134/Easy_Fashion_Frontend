@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 import { Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -18,6 +20,7 @@ import {
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 
 export default function Cart() {
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const cart = useAppSelector(selectCartItems);
   const subtotal = useAppSelector(selectCartSubtotal);
@@ -168,8 +171,19 @@ export default function Cart() {
                 </div>
               </div>
             </dl>
-            <Button asChild size="lg" className="mt-6 w-full shadow-brand text-white rounded">
-              <Link href="/checkout">Proceed to checkout</Link>
+            <Button 
+              size="lg" 
+              className="mt-6 w-full shadow-brand text-white rounded"
+              onClick={() => {
+                const token = Cookies.get("accessToken");
+                if (token) {
+                  router.push("/checkout");
+                } else {
+                  router.push("/login");
+                }
+              }}
+            >
+              Proceed to checkout
             </Button>
             <Button asChild variant="outline" className="mt-3 w-full *:shadow-brand text-primary rounded">
               <Link href="/shop">Continue shopping</Link>

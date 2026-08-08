@@ -1,11 +1,10 @@
 "use client";
 
+import { CheckCircle2, Lock, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { CheckCircle2, Lock } from "lucide-react";
 import { toast } from "sonner";
-import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,25 +19,9 @@ import {
   selectCartSubtotal,
   type CartItem,
 } from "@/redux/allSlice/cartSlice";
+import { useCreateOrderMutation } from "@/redux/api/orderApi";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
-
-const schema = z.object({
-  name: z.string().trim().min(2, "Please enter your full name").max(80),
-  phone: z
-    .string()
-    .trim()
-    .min(7, "Please enter a valid phone number")
-    .max(20)
-    .regex(
-      /^[0-9+\-\s()]+$/,
-      "Phone number can only contain digits and + - ( )",
-    ),
-  address: z
-    .string()
-    .trim()
-    .min(10, "Please enter a complete shipping address")
-    .max(300),
-});
+import { CheckoutSchema } from "@/schema/CheckoutSchema";
 
 type Order = {
   id: string;
@@ -63,10 +46,11 @@ export default function Checkout() {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [order, setOrder] = useState<Order | null>(null);
+  const [orderCreatedFn, { isLoading }] = useCreateOrderMutation();
 
-  const submit = (event: React.FormEvent) => {
+  const submit = async (event: React.FormEvent) => {
     event.preventDefault();
-    const parsed = schema.safeParse(form);
+    const parsed = CheckoutSchema.safeParse(form);
     if (!parsed.success) {
       const next: Record<string, string> = {};
       for (const issue of parsed.error.issues)
@@ -76,18 +60,41 @@ export default function Checkout() {
     }
 
     setErrors({});
-    const created: Order = {
-      id: `EF-${Date.now().toString().slice(-6)}`,
-      ...parsed.data,
-      items: cart,
-      total: grandTotal,
+
+    const payload = {
+      customerName: parsed.data.name,
+      phone: parsed.data.phone,
+      shippingAddress: parsed.data.address,
+      items: cart.map((item) => ({
+        productId: item.productId,
+        size: item.size,
+        quantity: item.quantity,
+      })),
     };
 
-    dispatch(clearCart());
-    setOrder(created);
-    toast.success("Order placed successfully", {
-      description: `Order ID ${created.id}`,
-    });
+    try {
+      const response = await orderCreatedFn(payload).unwrap();
+
+      const created: Order = {
+        id:
+          response?.data?._id ||
+          response?.data?.id ||
+          response?.id ||
+          `EF-${Date.now().toString().slice(-6)}`,
+        ...parsed.data,
+        items: cart,
+        total: grandTotal,
+      };
+
+      dispatch(clearCart());
+      setOrder(created);
+      toast.success("Order placed successfully", {
+        description: `Order ID ${created.id}`,
+      });
+    } catch (error) {
+      toast.error("Failed to place order");
+      console.error(error);
+    }
   };
 
   if (order) {
@@ -222,9 +229,15 @@ export default function Checkout() {
           <Button
             type="submit"
             size="lg"
-            className="mt-7 w-full shadow-brand rounded text-white"
+            className="mt-7 w-full shadow-brand rounded text-white flex items-center justify-center gap-2"
+            disabled={isLoading}
           >
-            <Lock className="size-4" /> Place order · {formatPrice(grandTotal)}
+            {isLoading ? (
+              <Loader2 className="size-4 animate-spin" />
+            ) : (
+              <Lock className="size-4" />
+            )}
+            Place order · {formatPrice(grandTotal)}
           </Button>
           <p className="mt-3 text-center text-xs text-muted-foreground">
             Cash on delivery. No payment details required.
