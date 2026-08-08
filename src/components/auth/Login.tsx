@@ -263,7 +263,7 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+          <div className="grid grid-cols-1 md:grid-cols-1 gap-4 w-full">
             <Button
               type="button"
               onClick={handleGoogleLogin}
@@ -290,7 +290,7 @@ export default function LoginPage() {
                 )}
               </span>
             </Button>
-            <Button
+            {/* <Button
               type="button"
               onClick={handleFacebookLogin}
               disabled={facebookLoading}
@@ -315,7 +315,7 @@ export default function LoginPage() {
                   "Continue with facebook"
                 )}
               </span>
-            </Button>
+            </Button> */}
           </div>
 
           <div className="text-center">
